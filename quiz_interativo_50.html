@@ -1,0 +1,119 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Interativo - Vue.js e SASS</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+        .question {
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 10px;
+        }
+        .options label {
+            display: block;
+            cursor: pointer;
+        }
+        .options input {
+            margin-right: 10px;
+        }
+        .correct {
+            color: green;
+            font-weight: bold;
+        }
+        .incorrect {
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Quiz Interativo - Vue.js e SASS</h1>
+    <div id="quiz-container"></div>
+
+    <script>
+        const questions = [
+            { question: "1. Qual diretiva Vue.js é usada para vinculação bidirecional de dados?", options: ["v-bind", "v-model", "v-if", "v-for"], answer: "v-model" },
+            { question: "2. Qual sintaxe de SASS utiliza indentação ao invés de chaves?", options: ["SCSS", "CSS", "Sass", "LESS"], answer: "Sass" },
+            { question: "3. Qual hook no ciclo de vida do Vue é executado após o componente ser montado no DOM?", options: ["created", "mounted", "updated", "destroyed"], answer: "mounted" },
+            { question: "4. Qual diretiva Vue.js é usada para renderizar condicionalmente um elemento?", options: ["v-for", "v-if", "v-bind", "v-model"], answer: "v-if" },
+            { question: "5. O que significa SPA no contexto do Vue Router?", options: ["Single Page Application", "Simple Program Application", "Styled Page Application", "Systematic Page Analysis"], answer: "Single Page Application" },
+            { question: "6. O que é o Vuex no Vue.js?", options: ["Gerenciador de rotas", "Gerenciador de estado", "Biblioteca de estilo", "Sistema de templates"], answer: "Gerenciador de estado" },
+            { question: "7. Qual diretiva Vue.js é usada para iterar sobre listas?", options: ["v-if", "v-for", "v-bind", "v-model"], answer: "v-for" },
+            { question: "8. Qual função o Vue CLI desempenha?", options: ["Gerenciar estados", "Criar projetos Vue", "Manipular o DOM", "Compilar SASS"], answer: "Criar projetos Vue" },
+            { question: "9. Qual diretiva Vue.js é usada para vincular atributos dinamicamente?", options: ["v-if", "v-bind", "v-for", "v-model"], answer: "v-bind" },
+            { question: "10. Qual diretiva Vue.js facilita inputs em formulários?", options: ["v-if", "v-model", "v-bind", "v-for"], answer: "v-model" },
+            { question: "11. O que significa a palavra-chave 'computed' no Vue?", options: ["Propriedade derivada", "Estado centralizado", "Hook do ciclo de vida", "Estilo CSS"], answer: "Propriedade derivada" },
+            { question: "12. Qual seletor em SASS permite referenciar o seletor pai?", options: ["$", "&", "@", "#"], answer: "&" },
+            { question: "13. O que é um mixin em SASS?", options: ["Função reusável", "Variável de estilo", "Biblioteca externa", "Gerador de CSS"], answer: "Função reusável" },
+            { question: "14. Qual sintaxe SASS é a mais utilizada?", options: ["LESS", "CSS puro", "SCSS", "Sass indentado"], answer: "SCSS" },
+            { question: "15. Qual hook do Vue é executado quando os dados são modificados?", options: ["created", "mounted", "updated", "destroyed"], answer: "updated" },
+            { question: "16. Qual é o propósito do Vue Router?", options: ["Gerenciar o estado", "Navegação entre componentes", "Criar estilos", "Manipular o DOM"], answer: "Navegação entre componentes" },
+            { question: "17. Como o Vue manipula o DOM de forma eficiente?", options: ["DOM Virtual", "DOM Manual", "jQuery", "Eventos"], answer: "DOM Virtual" },
+            { question: "18. Qual arquivo no Vue contém o HTML, JS e CSS do componente?", options: [".css", ".js", ".vue", ".sass"], answer: ".vue" },
+            { question: "19. O que significa v-for no Vue?", options: ["Estrutura de decisão", "Looping de lista", "Vinculação de dados", "Renderização dinâmica"], answer: "Looping de lista" },
+            { question: "20. Qual diretiva Vue.js é usada para manipular eventos?", options: ["v-on", "v-if", "v-for", "v-bind"], answer: "v-on" },
+            { question: "21. O que são variáveis em SASS?", options: ["Estilos dinâmicos", "Componentes", "Dados estáticos", "Pré-compilação"], answer: "Estilos dinâmicos" },
+            { question: "22. Como declarar variáveis em SCSS?", options: ["var", "$", "@", "#"], answer: "$" },
+            { question: "23. Qual comando compila SASS em CSS?", options: ["sass", "compile", "vue-cli", "npm"], answer: "sass" },
+            { question: "24. Qual é a extensão padrão de um arquivo SASS?", options: [".sass", ".scss", ".css", ".vue"], answer: ".scss" },
+            { question: "25. Qual diretiva em SASS permite importar arquivos?", options: ["@import", "@mixin", "@extend", "@function"], answer: "@import" }
+        ];
+
+        const container = document.getElementById('quiz-container');
+
+        function renderQuiz() {
+            questions.forEach((q, index) => {
+                const questionBlock = document.createElement('div');
+                questionBlock.classList.add('question');
+
+                const questionText = document.createElement('h3');
+                questionText.textContent = q.question;
+                questionBlock.appendChild(questionText);
+
+                const optionsBlock = document.createElement('div');
+                optionsBlock.classList.add('options');
+
+                q.options.forEach(option => {
+                    const label = document.createElement('label');
+                    const input = document.createElement('input');
+                    input.type = "radio";
+                    input.name = `question-${index}`;
+                    input.value = option;
+
+                    input.addEventListener('change', () => {
+                        const allInputs = optionsBlock.querySelectorAll('label');
+                        allInputs.forEach(label => {
+                            label.classList.remove('correct', 'incorrect');
+                        });
+                        if (option === q.answer) {
+                            label.classList.add('correct');
+                            label.textContent = `${option} ✔️ Resposta Correta!`;
+                        } else {
+                            label.classList.add('incorrect');
+                            label.textContent = `${option} ❌ Resposta Errada`;
+                        }
+                    });
+
+                    label.appendChild(input);
+                    label.append(option);
+                    optionsBlock.appendChild(label);
+                });
+
+                questionBlock.appendChild(optionsBlock);
+                container.appendChild(questionBlock);
+            });
+        }
+
+        renderQuiz();
+    </script>
+</body>
+</html>
